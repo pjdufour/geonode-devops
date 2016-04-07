@@ -1,0 +1,50 @@
+---
+
+- set_fact:
+    ansible_python_interpreter: "/usr/bin/python2.7"
+
+- name: Create PostGIS Template Database
+  become: yes
+  become_user: postgres
+  postgresql_db:
+    name: template_postgis
+    encoding: 'UTF8'
+    template: 'template1'
+
+- name: Create PostGIS Extension
+  become: yes
+  become_user: postgres
+  postgresql_ext:
+    name: postgis
+    db: template_postgis
+
+- name: Create PostGIS Topology Extension
+  become: yes
+  become_user: postgres
+  postgresql_ext:
+    name: postgis_topology
+    db: template_postgis
+
+#- name: Create fuzzystrmatch Extension
+#  become: yes
+#  become_user: postgres
+#  postgresql_ext:
+#    name: fuzzystrmatch
+#    db: template_postgis
+
+#- name: Create unaccent Extension
+#  become: yes
+#  become_user: postgres
+#  postgresql_ext:
+#    name: unaccent
+#    db: template_postgis
+
+#- name: Create dblink Extension
+#  become: yes
+#  become_user: postgres
+#  postgresql_ext:
+#    name: dblink
+#    db: template_postgis
+
+- set_fact:
+    ansible_python_interpreter: "/usr/bin/python2.6"

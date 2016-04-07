@@ -1,0 +1,24 @@
+---
+
+- name: "Create uwsgi user"
+  become: yes
+  become_user: root
+  user: name=uwsgi shell=/sbin/nologin home=/etc/uwsgi/ comment=""
+
+- name: Creates directories
+  become: yes
+  become_user: root
+  file: path={{ item }} state=directory owner=uwsgi group=uwsgi
+  with_items:
+    - /etc/uwsgi/
+    - /var/run/uwsgi/
+
+- name: "Upload /etc/init.d/uwsgi"
+  become: yes
+  become_user: root
+  template: src="templates/etc.init.d.uwsgi.j2" dest="/etc/init.d/uwsgi" owner="uwsgi" group="uwsgi" mode="u+rx"
+
+- name: Configure & Restart UWSGI service
+  become: yes
+  become_user: root
+  service: name=uwsgi state=restarted enabled=yes

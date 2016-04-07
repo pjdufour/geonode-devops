@@ -1,0 +1,22 @@
+---
+
+- name: "Download Python 2.7.6"
+  become: yes
+  become_user: root
+  get_url: url="{{ URI_SOURCE.python276 }}" dest="/usr/src/Python-2.7.6.tgz"
+
+- name: "Unpack Gzipped Python Code"
+  become: yes
+  become_user: root
+  unarchive: src=/usr/src/Python-2.7.6.tgz dest=/usr/src/ copy=no
+
+- name: "Make & Install Python"
+  become: yes
+  become_user: root
+  shell: "{{ item }}"
+  args:
+    chdir: "/usr/src/Python-2.7.6"
+  with_items:
+    - "./configure --prefix=/usr/ --enable-shared LDFLAGS=\"-Wl,-rpath /usr/lib\""
+    - "make"
+    - "make altinstall"

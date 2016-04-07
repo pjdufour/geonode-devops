@@ -1,0 +1,18 @@
+---
+
+- name: "GDAL Python Bindings / Download GDAL-1.9.1"
+  become: yes
+  become_user: root
+  get_url: url="{{ URI_SOURCE.gdal191 }}" dest="/usr/src/GDAL-1.9.1.tar.gz"
+
+- name: "GDAL Python Bindings / Unpack GDAL"
+  become: yes
+  become_user: root
+  unarchive: src=/usr/src/GDAL-1.9.1.tar.gz dest=/usr/src/ copy=no
+
+- name: "GDAL Python Bindings / Install"
+  become: yes
+  become_user: root
+  shell: "python2.7 setup.py build_ext $(gdal-config --cflags) install"
+  args:
+    chdir: "/usr/src/GDAL-1.9.1"

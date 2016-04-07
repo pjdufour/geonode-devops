@@ -1,0 +1,9 @@
+---
+
+- name: Check if Python 2.7 is Installed
+  stat: path=/usr/bin/python2.7
+  register: e
+
+- name: "Install Python"
+  include: install_python.yml
+  when: not (e.stat.isreg is defined and e.stat.isreg)

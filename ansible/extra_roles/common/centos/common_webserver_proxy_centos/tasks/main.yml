@@ -1,0 +1,24 @@
+---
+
+- assert:
+    that:
+      - PACKAGES_PROXY != ''
+  tags: ['check_vars']
+
+- name: Download NGINX Packages
+  become: yes
+  become_user: root
+  yum: name={{ item }} state=present
+  with_items: "{{ PACKAGES_PROXY }}"
+
+- name: Install NGINX
+  become: yes
+  become_user: root
+  yum: name={{ item }} state=present
+  with_items:
+    - nginx
+
+- name: "Configure & Restart NGINX Service"
+  become: yes
+  become_user: root
+  service: name=nginx state=restarted enabled=yes

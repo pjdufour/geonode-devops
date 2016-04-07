@@ -1,0 +1,16 @@
+*.DS_Store
+*.swp
+secret
+secret.yml
+.vagrant
+hosts
+ansible.log
+*.pyc
+packer_cache
+output-virtualbox-ovf
+*.box
+box
+build
+builds
+geoserver.war
+geonodes.py

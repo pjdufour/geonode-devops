@@ -1,0 +1,27 @@
+---
+
+- name: "apt-get update"
+  apt: update_cache=yes
+  become: yes
+  become_user: root
+
+- name: Install Basic Libraries
+  become: yes
+  become_user: root
+  apt: name="{{ item }}" state=latest
+  with_items:
+    - curl
+    - vim
+    - git
+
+- name: Install Python Libraries
+  become: yes
+  become_user: root
+  apt: name="{{ item }}" state=latest
+  with_items:
+    - python-software-properties
+    - build-essential
+    - python-dev
+    - python-pip
+    - python-virtualenv
+    - python-apt

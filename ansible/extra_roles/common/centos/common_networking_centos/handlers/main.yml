@@ -1,0 +1,6 @@
+---
+
+- name: restart iptables
+  become: yes
+  become_user: root
+  service: name=iptables state=restarted

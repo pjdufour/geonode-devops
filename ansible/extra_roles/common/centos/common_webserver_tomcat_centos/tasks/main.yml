@@ -1,0 +1,13 @@
+---
+
+- name: Install Tomcat
+  become: yes
+  become_user: root
+  yum: name={{ item }} state=present
+  with_items: "{{ PACKAGES_TOMCAT }}"
+
+- name: "Configure & Restart Tomcat Services"
+  become: yes
+  become_user: root
+  service: name="{{ item }}" state=restarted enabled=yes
+  with_items: "{{ SERVICES_TOMCAT }}"

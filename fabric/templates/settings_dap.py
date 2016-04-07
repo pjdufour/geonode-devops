@@ -1,0 +1,3 @@
+ANALYTICS_DAP_ENABLED = True
+ANALYTICS_DAP_AGENCY = "{{agency}}"
+ANALYTICS_DAP_SUBAGENCY = "{{subagency}}"

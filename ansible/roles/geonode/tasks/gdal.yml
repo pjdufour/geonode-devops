@@ -1,0 +1,15 @@
+---
+
+- name: Create src directory
+  file: path="/home/vagrant/src" state=directory
+
+- name: "GDAL Python Bindings / Download GDAL-{{ GDAL_VERSION}}"
+  get_url: url="{{ GDAL_SOURCE }}" dest="/home/vagrant/src/GDAL-{{ GDAL_VERSION }}.tar.gz"
+
+- name: "GDAL Python Bindings / Unpack GDAL"
+  unarchive: src="/home/vagrant/src/GDAL-{{ GDAL_VERSION }}.tar.gz" dest="/home/vagrant/src/" copy=no
+
+- name: "GDAL Python Bindings / Install"
+  shell: "{{ VENV_PATH }}/bin/python2.7 setup.py build_ext $(gdal-config --cflags) install"
+  args:
+    chdir: "/home/vagrant/src/GDAL-{{ GDAL_VERSION }}"

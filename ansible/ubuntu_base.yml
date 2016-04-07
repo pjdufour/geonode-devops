@@ -1,0 +1,12 @@
+---
+
+- name: Creates a GeoNode development virtual machine
+  hosts: all
+  remote_user: vagrant
+
+  roles:
+    - common_base_ubuntu  # Installs basic libraries, including GCC, PIP
+    - common_java_ubuntu # Installs Java
+    - common_webserver_django_ubuntu  # Installs dependencies, and configures uwsgi service
+    - common_webserver_proxy_ubuntu  # Installs NGINX, and configures service
+    - common_venv_ubuntu

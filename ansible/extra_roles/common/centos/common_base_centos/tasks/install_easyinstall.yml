@@ -1,0 +1,18 @@
+---
+
+- name: "Download ez_setup"
+  become: yes
+  become_user: root
+  get_url: url="{{ URI_SOURCE.ez_setup }}" dest="/usr/src"
+  any_errors_fatal: true
+
+- name: "Install Easy Install"
+  become: yes
+  become_user: root
+  shell: "{{ item }}"
+  args:
+    chdir: "/usr/src"
+  with_items:
+    - "python2.7 ez_setup.py"
+    - "rm -r ez_setup.py setuptools*"
+  any_errors_fatal: true

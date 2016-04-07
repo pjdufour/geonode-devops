@@ -1,0 +1,3 @@
+ansible
+fabric
+git+git://github.com/pjdufour/python-cli-util.git@master

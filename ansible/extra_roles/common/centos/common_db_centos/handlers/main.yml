@@ -1,0 +1,6 @@
+---
+
+- name: restart postgresql-9.2
+  become: yes
+  become_user: root
+  service: name=postgresql-9.2 state=restarted

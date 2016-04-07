@@ -1,0 +1,13 @@
+---
+
+- assert:
+    that:
+      - IPTABLES_RULES != ''
+  tags: ['check_vars']
+
+- name: Configure iptables
+  become: yes
+  become_user: root
+  lineinfile: dest=/etc/sysconfig/iptables insertafter="{{ item.insertafter }}" line="{{ item.line }}"
+  with_items: "{{ IPTABLES_RULES }}"
+  notify: restart iptables

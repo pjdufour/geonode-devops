@@ -1,0 +1,49 @@
+{
+  "variables": {
+    "home": "{{env `HOME`}}",
+    "ansible_playbook": "ansible/ubuntu_base.yml",
+    "ansible_secret": "secret.yml",
+    "ansible_sys": "base",
+    "ansible_os": "ubuntu",
+    "vagrant_box": "ubuntu-VAGRANTSLASH-trusty64",
+    "output_box": "geonode-base-ubuntu-trusty64",
+    "memory": 8192,
+    "cpus": 4
+  },
+  "builders": [{
+      "type": "virtualbox-ovf",
+      "source_path": "{{user `home`}}/.vagrant.d/boxes/{{user `vagrant_box`}}/0/virtualbox/box.ovf",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "headless": true,
+      "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+        ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"]
+      ],
+      "output_directory": "build/packer/{{user `output_box`}}"
+  }],
+  "provisioners": [{
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "inline": [
+          "sleep 3",
+          "apt-get -y install python-pip",
+          "pip install ansible"
+      ]
+  },
+  {
+      "type": "ansible-local",
+      "playbook_dir": ".",
+      "playbook_file": "{{user `ansible_playbook`}}",
+      "extra_arguments": [
+      ],
+      "role_paths": ["ansible/roles", "ansible/extra_roles/common/{{user `ansible_os`}}"]
+  }],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "output": "build/vagrant/{{.Provider}}/{{user `output_box`}}.box"
+    }
+  ]
+}

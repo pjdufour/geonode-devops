@@ -1,0 +1,20 @@
+---
+
+- name: "Install Java"
+  become: yes
+  become_user: root
+  apt: name="{{ item }}" state=present #force=yes # install_recommends=no #force=yes
+  with_items: "{{ PACKAGES_JAVA }}"
+
+- name: "Set Java Alternative"
+  become: yes
+  become_user: root
+  alternatives: name=java path="{{ ALTERNATIVE_JAVA }}"
+
+- name: "Install Ant & Maven2"
+  become: yes
+  become_user: root
+  apt: name="{{ item }}" state=present
+  with_items:
+    - ant
+    - maven2

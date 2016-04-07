@@ -1,0 +1,40 @@
+---
+
+- include: pip.yml
+
+- name: "Install Python Libraries (via PIP)"
+  pip: name="{{ item }}" virtualenv="{{ VENV_PATH }}"
+  with_items:
+    - "pillow"
+    - "pinax-theme-bootstrap==3.0a11"
+    - "pinax-theme-bootstrap-account==1.0b2"
+    - "django-tastypie"
+    - "django-autocomplete-light"
+    - "django-mptt"
+    - "django-taggit"
+    - "django-taggit-templatetags"
+    - "django-modeltranslation"
+    - "django-jsonfield"
+    - "django-downloadview"
+    - "django-pagination"
+    - "django-friendly-tag-loader"
+    - "django-extensions"
+    - "django-geoexplorer"
+    - "django-leaflet"
+
+- name: "gdal check"
+  shell: "{{ VENV_PATH }}/bin/pip list | grep \"^GDAL ({{ GDAL_VERSION }})$\""
+  args:
+    chdir: "/home/vagrant"
+  ignore_errors: yes
+  register: gdal_present
+  changed_when: False
+  failed_when: False
+
+- include: gdal.yml
+  when: gdal_present.rc == 1
+
+- name: "Install GeoNode as Editable"
+  shell: "{{ VENV_PATH }}/bin/pip install -e geonode"
+  args:
+    chdir: "/home/vagrant"

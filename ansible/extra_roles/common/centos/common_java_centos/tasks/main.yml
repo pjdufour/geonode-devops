@@ -1,0 +1,12 @@
+---
+
+- name: "Install Java"
+  become: yes
+  become_user: root
+  yum: name="{{ item }}" state=present
+  with_items: "{{ PACKAGES_JAVA }}"
+
+- name: "Set Java Alternative"
+  become: yes
+  become_user: root
+  alternatives: name=java path="{{ ALTERNATIVE_JAVA }}"

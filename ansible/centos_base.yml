@@ -1,0 +1,17 @@
+---
+
+- name: Creates a GeoNode development virtual machine
+  hosts: all
+  remote_user: vagrant
+
+  roles:
+    - common_networking_centos  # Configure iptables for outside access
+    - common_base_centos  # Installs basic libraries, including GCC, PIP
+    - common_java_centos # Installs Java
+    - common_db_centos  # Installs gdal & postgres, builds PostGIS from source, and creates template_postgis
+    - common_memcached_centos
+    - common_rabbitmq_centos  # Required by celery, which is used by GeoNode
+    - common_webserver_tomcat_centos  # Installs Tomcat and Configures Service
+    - common_webserver_django_centos  # Installs dependencies, and configures uwsgi service
+    - common_webserver_proxy_centos  # Installs NGINX, and configures service
+    # - geonode # Not ready yet.

@@ -1,0 +1,12 @@
+---
+
+- name: "Add Virtual Environment Comands to .bash_aliases"
+  lineinfile: "dest=~/.bash_aliases line={{ item }} create=yes"
+  with_items:
+    - "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python"
+    - "export WORKON_HOME=~/.venvs"
+    - "source /usr/local/bin/virtualenvwrapper.sh"
+    - "export PIP_DOWNLOAD_CACHE=$HOME/.pip-downloads"
+
+- name: "Create Virtual Environment {{ VENV_NAME }}"
+  command: "virtualenv {{ VENV_PATH }} -p python2.7 creates={{ VENV_PATH }}"

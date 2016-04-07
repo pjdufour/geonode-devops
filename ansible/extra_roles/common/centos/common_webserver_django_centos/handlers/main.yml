@@ -1,0 +1,6 @@
+---
+
+- name: restart uwsgi
+  become: yes
+  become_user: root
+  service: name=uwsgi state=restarted

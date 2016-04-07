@@ -1,0 +1,32 @@
+---
+
+- name: Download libxml2 and libxslt  # Needed to build PostGIS from source
+  become: yes
+  become_user: root
+  yum: name="{{ item }}" state=present
+  with_items:
+    - libxml2
+    - libxml2-devel
+    - libxslt
+
+- name: "Download postgis source"
+  become: yes
+  become_user: root
+  get_url: url="{{ URI_SOURCE.postgis }}" dest="/usr/src/postgis-2.0.6.tar.gz"
+
+- name: "Unpack PostGIS Source Code"
+  become: yes
+  become_user: root
+  unarchive: src=/usr/src/postgis-2.0.6.tar.gz dest=/usr/src/ copy=no
+
+- name: "Build PostGIS From Source (pg_config fix)"
+  become: yes
+  become_user: root
+  shell: "{{ item }}"
+  args:
+    chdir: "/usr/src/postgis-2.0.6"
+  with_items:
+    - "./configure --with-pgconfig=/usr/pgsql-9.2/bin/pg_config"
+    # will get libxml2 automatically when lbxml2-devel installed   --with-xml2config=/usr/lib64/libxml2.so.2.7.6"
+    - "make"
+    - "make install"

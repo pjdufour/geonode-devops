@@ -1,0 +1,92 @@
+---
+
+- assert:
+    that:
+      - PACKAGES_DATABASE != ''
+  tags: ['check_vars']
+
+- name: Download EPEL Packages
+  become: yes
+  become_user: root
+  yum: name={{ item }} state=present
+  with_items: "{{ PACKAGES_EPEL }}"
+
+# http://serverfault.com/questions/637549/epel-repo-for-centos-6-causing-error
+- name: "Upgrade Certs for EPEL"
+  become: yes
+  become_user: root
+  shell: "yum -y upgrade ca-certificates --disablerepo=epel"
+  register: epel_result
+  changed_when: (epel_result.stdout_lines | last) != "No Packages marked for Update"
+
+- name: Download PostgreSQL Packages
+  become: yes
+  become_user: root
+  yum: name={{ item }} state=present
+  with_items: "{{ PACKAGES_DATABASE }}"
+
+- name: Install PostgreSQL Packages
+  become: yes
+  become_user: root
+  yum: name={{ item }} state=present
+  with_items:
+    - postgresql92-server
+    - postgis2_92-client-2.0.4
+    - postgresql92-devel
+    - postgis2_92-devel-2.0.4
+    - gdal-devel
+    - postgresql-devel  # Used by rebuilding PostGIS later
+    - geos-devel  # Used by rebuilding PostGIS later
+    - geos-python  # Used by rebuilding PostGIS later
+    - proj-devel  # Used by rebuilding PostGIS later
+    # - postgresql92-contrib.x86_64  # needed for db_link
+
+- name: "GDAL Python Bindings / Requirement Check"
+  become: yes
+  become_user: root
+  shell: "/usr/bin/pip list | grep \"^GDAL (1.9.1)$\""
+  ignore_errors: yes
+  register: gdal_present
+  changed_when: False
+  failed_when: False
+
+- include: gdal.yml
+  when: gdal_present.rc == 1
+
+- name: Install Psycopg2
+  become: yes
+  become_user: root
+  shell: "export PATH=/usr/pgsql-9.2/bin:$PATH; pip install psycopg2"
+  register: psycopg2_result
+  changed_when: not "Requirement already satisfied" in psycopg2_result.stdout
+
+- name: "Build PostGIS from Source (PostGIS Fix)"
+  include: build_postgis.yml
+
+- name: Initialize Postgres Database
+  become: yes
+  become_user: root
+  shell: "service postgresql-9.2 initdb"
+
+- name: restart postgresql-9.2
+  become: yes
+  become_user: root
+  service: name=postgresql-9.2 state=restarted enabled=yes
+
+- name: "create database template template_postgis"
+  include: template_postgis.yml
+
+- name: "Add access to pg_hba.conf for DB users"
+  become: yes
+  become_user: postgres
+  lineinfile: dest="{{ PATH_PG_HBA }}" regexp="{{ item.regexp }}" line="{{ item.line }}" state="{{ item.state }}" create=yes owner="postgres" group="postgres" mode="u=rw,g=rw,o=r"
+  with_items: "{{ DATABASE_ACL }}"
+  notify: restart postgresql-9.2
+
+- name: "Add access to postgresql.conf for IP Addresses"
+  become: yes
+  become_user: postgres
+  lineinfile: dest="{{ PATH_PG_CONF }}" regexp="^#?listen_addresses\\s*=" line="listen_addresses = '{{ DATABASE_LISTEN_ADDRESSES | join(',') }}'" state=present
+  notify: restart postgresql-9.2
+
+- meta: flush_handlers  # Restart PostgreSQL if pg_hba.conf or postgresql.conf changed

@@ -1,0 +1,31 @@
+{
+  "variables": {
+    "home": "{{env `HOME`}}",
+    "ansible_playbook": "ansible/playbooks/centos/base.yml",
+    "ansible_secret": "secret.yml",
+    "ansible_sys": "base",
+    "ansible_os": "centos"
+  },
+  "builders": [{
+      "type": "virtualbox-ovf",
+      "source_path": "{{user `home`}}/.vagrant.d/boxes/centos-VAGRANTSLASH-64/0/virtualbox/box.ovf",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "headless": true,
+      "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+  }],
+  "provisioners": [{
+      "type": "ansible-shell",
+    },
+    {
+      "type": "ansible-local",
+      "playbook_dir": ".",
+      "playbook_file": "{{user `ansible_playbook`}}",
+      "extra_arguments": [
+        "--extra-vars=@ansible/extra_vars/sys/{{user `ansible_sys`}}.yml",
+        "--extra-vars=@{{user `ansible_secret`}}"
+      ],
+      "role_paths": ["ansible/roles", "ansible/extra_roles/common/{{user `ansible_os`}}"]
+  }],
+  "post-processors": ["vagrant"]
+}

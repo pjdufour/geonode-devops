@@ -1,0 +1,56 @@
+---
+
+- name: "Add UbuntuGIS repo"
+  become: yes
+  become_user: root
+  apt_repository: repo="ppa:ubuntugis/ubuntugis-unstable" state=present
+
+- name: Install Basic Libraries
+  become: yes
+  become_user: root
+  apt: name="{{ item }}" state=latest
+  with_items:
+    - libxml2-dev
+    - libxslt1-dev
+    - libjpeg-dev
+    - gettext
+
+- name: Install GIS Libraries
+  become: yes
+  become_user: root
+  apt: name="{{ item }}" state=latest
+  with_items:
+    - libgdal1h
+    - libgdal-dev
+    - libgeos-dev
+    - libpq-dev
+
+- name: Install Other Libraries
+  become: yes
+  become_user: root
+  apt: name="{{ item }}" state=latest
+  with_items:
+    - transifex-client
+
+- name: Install Python Libraries (via APT)
+  become: yes
+  become_user: root
+  apt: name="{{ item }}" state=latest
+  with_items:
+    - python-gdal
+    - python-lxml
+    - python-psycopg2
+    - python-django
+    - python-bs4
+    - python-multipartposthandler
+    - python-nose
+    - python-django-nose
+    - python-django-pagination
+
+- name: Install Python Libraries (via PIP)
+  become: yes
+  become_user: root
+  pip: name="{{ item }}" state=latest
+  with_items:
+    - virtualenvwrapper
+    - paver

@@ -1,0 +1,9 @@
+---
+
+# For compatibility & deprecation notes see:  https://pip.pypa.io/en/stable/news/
+- name: "Switch PIP to Version {{ PIP_VERSION }}"
+  shell: "{{ VENV_PATH }}/bin/pip install pip=={{ PIP_VERSION }}"
+  args:
+    chdir: "/home/vagrant"
+  register: pip_result
+  changed_when: not "Requirement already satisfied" in pip_result.stdout

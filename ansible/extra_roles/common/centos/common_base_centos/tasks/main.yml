@@ -1,0 +1,59 @@
+---
+
+- name: Install Basic Libraries
+  become: yes
+  become_user: root
+  yum: name={{ item }} state=latest
+  with_items:
+    - vim
+    - wget
+    - unzip
+    - telnet
+    - nmap
+    - git
+
+- name: Install Compiliers & Kernel Modules
+  become: yes
+  become_user: root
+  yum: name={{ item }} state=latest
+  with_items:
+    - gcc
+    - gcc-c++
+    - kernel-headers
+    - kernel-devel
+    - dkms
+
+##############
+# Python 2.7 should have been installed via pre_tasks
+
+- name: "Check if Easy Install is Installed"
+  stat: path=/usr/bin/easy_install-2.7
+  register: e
+
+- name: "Install Easy Install"
+  include: install_easyinstall.yml
+  when: not (e.stat.isreg is defined and e.stat.isreg)
+
+- name: "Check if PIP is Installed"
+  stat: path=/usr/bin/pip
+  register: e
+
+- name: "Install PIP"
+  become: yes
+  become_user: root
+  shell: "easy_install-2.7 pip"
+  args:
+    chdir: "/usr/src"
+  when: not (e.stat.isreg is defined and e.stat.isreg)
+
+- name: "Check if virtualenv is Installed"
+  stat: path=/usr/bin/virtualenv
+  register: e
+
+- name: "Install virtualenv"
+  become: yes
+  become_user: root
+  shell: "easy_install-2.7 virtualenv"
+  args:
+    chdir: "/usr/src"
+  when: not (e.stat.isreg is defined and e.stat.isreg)

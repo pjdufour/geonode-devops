@@ -1,0 +1,2 @@
+ANALYTICS_GA_ENABLED = True
+ANALYTICS_GA_CODE = "{{code}}"

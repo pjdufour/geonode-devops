@@ -1,0 +1,39 @@
+---
+
+
+- name: Install System Libraries
+  become: yes
+  become_user: root
+  yum: name="{{ item }}" state=present
+  with_items:
+    - "@^Development tools"
+    - zlib-devel
+    - bzip2-devel
+    - openssl-devel
+    - ncurses-devel
+    - sqlite-devel
+    - readline-devel
+    - tk-devel
+    - gdbm-devel
+    - db4-devel
+    - pcre-devel
+    - libxml2-devel
+    - libxslt-devel
+    - freetype-devel
+    - libjpeg-devel
+    - libpng-devel
+    - ImageMagick
+
+- name: Install Python Libraries
+  become: yes
+  become_user: root
+  pip: name="{{ item }}" state=present
+  with_items:
+    - numpy
+    - ipython
+    - ipdb
+    - lxml
+    - uwsgi
+    - uwsgitop
+
+- include: uwsgi.yml
