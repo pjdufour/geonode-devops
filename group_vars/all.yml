@@ -17,9 +17,9 @@ IPTABLES_RULES:
 
 # common_java_ubuntu
 PACKAGES_JAVA:
-  - "openjdk-7-jdk"
+  - "openjdk-8-jdk"
 
-ALTERNATIVE_JAVA: "/usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java"
+ALTERNATIVE_JAVA: "/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java"
 
 # common_db_centos
 PACKAGES_EPEL:
@@ -48,9 +48,7 @@ VENV_NAME: geonode
 VENV_PATH: "/home/vagrant/.venvs/geonode"
 
 # geonode
-#PIP_VERSION: "6.1.1"
 PIP_VERSION: "8.1.1"
-GEOSERVER_WAR_LOCATION: "http://build.geonode.org/geoserver/latest/geoserver.war"
 POSTGIS_VERSION: "( 2, 0, 6 )"
-GDAL_VERSION: "1.10.0"
-GDAL_SOURCE: "http://pypi.python.org/packages/source/G/GDAL/GDAL-1.10.0.tar.gz"
+GDAL_VERSION: "2.1.0"
+GDAL_SOURCE: "https://pypi.python.org/packages/d1/98/27fff31ad298f3ec50db19dc3adfd8387279e158b1c6331c531c5fc7d830/GDAL-2.1.0.tar.gz"

@@ -2,6 +2,8 @@
 
 DevOps tools for developing & deploying [GeoNode](http://geonode.org/), including [Ansible](https://www.ansible.com/), [Packer](https://www.packer.io/), [Vagrant](https://www.vagrantup.com/), and [Fabric](http://www.fabfile.org/) configuration files for building and managing Ubuntu and CentOS GeoNode boxes.
 
+After following the installation steps, continue to [Launch](#launch) section to start up GeoNode.
+
 # Installation
 
 On the control/host machine, you'll need to install [Ansible](https://www.ansible.com/), [Packer](https://www.packer.io/), [Vagrant](https://www.vagrantup.com/), and [Fabric](http://www.fabfile.org).
@@ -112,12 +114,14 @@ vagrant box add --name "centos/6.4" http://developer.nrel.gov/downloads/vagrant-
 
 ```
 
-To add an Ubuntu 14.04 ("Trusty") vagrant box to your control machine, run:
+To add an Ubuntu 16.04 LTS ("Xenial") vagrant box to your control machine, run:
 
 ```
-vagrant box add ubuntu/trusty64
+vagrant box add bento/ubuntu-16.04
 
 ```
+
+Do no use `ubuntu/xenial64` from Ubuntu cloud images, as referenced here: https://bugs.launchpad.net/cloud-images/+bug/1569237.
 
 To launch the GeoNode virtual machine run:
 
@@ -141,10 +145,10 @@ To build a base box for CentOS 6.4, run:
 packer build -var 'ansible_playbook=ansible/centos_base.yml' -var 'ansible_secret=secret.yml' -var 'ansible_os=centos' packer/centos64.json
 ```
 
-To build a base box for Ubuntu 14.04, run:
+To build a base box for Ubuntu 16.04, run:
 
 ```
-packer build -var 'ansible_playbook=ansible/ubuntu_base.yml' -var 'ansible_secret=secret.yml' -var 'ansible_os=ubuntu' packer/ubuntu1404.json
+packer build -var 'ansible_playbook=ansible/ubuntu_base.yml' -var 'ansible_secret=secret.yml' -var 'ansible_os=ubuntu' packer/ubuntu1604.json
 ```
 
 #### Adding Your New Box

@@ -11,10 +11,10 @@
   become_user: root
   alternatives: name=java path="{{ ALTERNATIVE_JAVA }}"
 
-- name: "Install Ant & Maven2"
+- name: "Install Ant & Maven"
   become: yes
   become_user: root
   apt: name="{{ item }}" state=present
   with_items:
     - ant
-    - maven2
+    - maven

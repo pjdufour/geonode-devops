@@ -5,8 +5,8 @@
     "ansible_secret": "secret.yml",
     "ansible_sys": "base",
     "ansible_os": "ubuntu",
-    "vagrant_box": "ubuntu-VAGRANTSLASH-trusty64",
-    "output_box": "geonode-base-ubuntu-trusty64",
+    "vagrant_box": "bento-VAGRANTSLASH-ubuntu-16.04",
+    "output_box": "geonode-base-ubuntu-xenial64",
     "memory": 8192,
     "cpus": 4
   },
