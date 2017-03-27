@@ -181,6 +181,12 @@ paver setup
 paver start -b 0.0.0.0:8000  # Launches Django and GeoServer.  Listens to all addresses on port 8000.
 ```
 
+If the fixtures are not loaded, use the following:
+
+```
+python manage.py loaddata geonode/base/fixtures/initial_data.json
+```
+
 ## Fabric
 
 [Fabric](http://www.fabfile.org/) provides an easy command line interface for executing remote shell commands and for transferring files between machines.  For GeoNode, Fabric can be used to import large files, `updatelayers`, manage GeoServer restart cron jobs, and backup a remote GeoNode locally.

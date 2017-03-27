@@ -27,6 +27,7 @@
     #- libgeos-c1  # see https://groups.google.com/forum/#!topic/cartodb/CuDJs5Nm0ww
     - libgeos-c1v5  # see https://groups.google.com/forum/#!topic/cartodb/CuDJs5Nm0ww
     - libpq-dev
+    #- libsqlite3-mod-spatialite  # Not default.  If using Django spatialite backend, install this.
 
 - name: Install Other Libraries
   become: yes

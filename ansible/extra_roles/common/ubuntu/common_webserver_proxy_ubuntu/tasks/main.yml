@@ -1,10 +1,18 @@
 ---
 
+- name: Install NGINX
+  become: yes
+  become_user: root
+  apt: name="{{ item }}" state=latest
+  with_items:
+    - nginx
+
 - name: Install Node.js & NPM
   become: yes
   become_user: root
   apt: name="{{ item }}" state=latest
   with_items:
+    - nginx
     - nodejs
     - npm
 
@@ -15,3 +23,10 @@
   with_items:
     - bower
     - grunt-cli
+    - gulp
+    - yarn
+
+- name: Alias node & nodejs
+  become: yes
+  become_user: root
+  file: "src=/usr/bin/nodejs dest=/usr/bin/node state=link owner=root"
